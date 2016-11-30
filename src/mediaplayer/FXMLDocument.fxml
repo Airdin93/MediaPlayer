@@ -14,7 +14,7 @@
           <Button mnemonicParsing="false" onAction="#stopButton" text="Stop" />
         </buttons>
       </ButtonBar>
-      <Label layoutX="40.0" layoutY="52.0" text="Label" />
+      <Label fx:id="actionStatusLabel" layoutX="40.0" layoutY="52.0" text="Action Status Label" />
       <Button layoutX="104.0" layoutY="85.0" mnemonicParsing="false" onAction="#openSong" text="Open" />
     </children>
 </AnchorPane>

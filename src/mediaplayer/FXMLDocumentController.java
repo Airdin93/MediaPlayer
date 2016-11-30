@@ -6,10 +6,9 @@
 package mediaplayer;
 
 import java.io.File;
-import java.net.URL;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
@@ -20,24 +19,26 @@ import javafx.stage.FileChooser;
  */
 public class FXMLDocumentController {
     
-    Media media = new Media(new File("C:/08 - Jason Hayes - Stormwind (City Theme).mp3").toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(media);
+//    Media media = new Media(new File("C:/08 - Jason Hayes - Stormwind (City Theme).mp3").toURI().toString());
+//    MediaPlayer mediaPlayer = new MediaPlayer(media);
     FileChooser fileChooser = new FileChooser();
+    public MediaPlayer selectedMediaPlay;
+    public Media selectedMedia;
+    public File selectedFile;
     
     @FXML
-    private void playButton(ActionEvent event) {
-        mediaPlayer.play();
+    private void playButton(ActionEvent event)  {
+        selectedMediaPlay.play();
     }
     
     @FXML
     private void stopButton(ActionEvent event) {
-        mediaPlayer.stop();
+        selectedMediaPlay.stop();
     }
 
     @FXML
     private void pauseButton(ActionEvent event) {
-        mediaPlayer.pause();
-//        mediaPlayer.getMedia();
+        selectedMediaPlay.pause();
     }
 
     @FXML
@@ -46,21 +47,29 @@ public class FXMLDocumentController {
         singleFileChooser();
     }
 
+    @FXML
+    private Label actionStatusLabel;
     
-    private void singleFileChooser() {
-	
-	FileChooser fileChooser = new FileChooser();
-	File selectedFile = fileChooser.showOpenDialog(null);
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("*.mp3"));
+    public void singleFileChooser() {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("mp3 files (*.mp3)", "*.mp3");
+        fileChooser.getExtensionFilters().add(extFilter);
+        selectedFile = fileChooser.showOpenDialog(null);
+//        fileGet();
         
 	if (selectedFile != null) 
         {
-            System.out.println("No file Chosen!");
+            actionStatusLabel.setText(selectedFile.getPath());
+            selectedMedia = new Media(new File(selectedFile.getPath()).toURI().toString());
+            selectedMediaPlay = new MediaPlayer(selectedMedia);
 	}
 	else 
         {
-//		actionStatus.setText("File selection cancelled.");
-	}
+            actionStatusLabel.setText("No file chosen!");
+	}   
     }
     
+    public void fileGet()
+    {
+        File selectedFile = fileChooser.showOpenDialog(null);
+    }
 }
