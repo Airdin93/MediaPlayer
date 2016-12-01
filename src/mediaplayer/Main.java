@@ -23,6 +23,7 @@ public class Main extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.setTitle("Cool Media Player 9k");
         stage.setScene(scene);
         stage.show();
     }
