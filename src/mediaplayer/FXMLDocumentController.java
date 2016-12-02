@@ -6,29 +6,17 @@
 package mediaplayer;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Observable;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
-
-
-import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 
 /**
  *
@@ -41,7 +29,6 @@ public class FXMLDocumentController {
     private Media selectedMedia;
     private File selectedFile;
     private Duration duration;
-
     
     @FXML
     private void playButton(ActionEvent event)  
@@ -64,8 +51,9 @@ public class FXMLDocumentController {
                 {
                     selectedMediaPlay.play();
                     playStatusLabel.setText("Pause");
-                    totalDuration();
-                    duration();
+                    timeSlider();
+                    volumeSlider();
+                    updateValuesListner();
                 }
         }
         else
@@ -102,16 +90,20 @@ public class FXMLDocumentController {
     private Label playStatusLabel;
     
     @FXML
-    private Label totalDurationLabel;
-    
-    @FXML
     private Label durationLabel;
     
     @FXML
     private Slider volumeSlider;
     
     @FXML
-    private Slider time;
+    private Slider timeSlider;
+    
+    @FXML
+    private void testButton(ActionEvent event)
+    {
+        volumeSlider.setValue(50);
+        selectedMediaPlay.setVolume(50.0);
+    }
     
     
     private void singleFileChooser() {
@@ -149,63 +141,118 @@ public class FXMLDocumentController {
         actionStatusLabel.setText("No Music Chosen!");
     }
     
-    private void totalDuration()
+    private void timeSlider()
     {
-        durationLabel.setText("Duration: "+selectedMedia.getDuration().toSeconds());
+    duration = selectedMediaPlay.getMedia().getDuration();
+        timeSlider.valueProperty().addListener(new InvalidationListener() 
+        {
+            @Override
+            public void invalidated(Observable ov) 
+            {
+                if (timeSlider.isValueChanging()) 
+                {
+                selectedMediaPlay.seek(duration.multiply(timeSlider.getValue() / 100.0));
+                }
+            }   
+        });
     }
     
-    private void duration()
+    private void volumeSlider()
     {
-//        duration = selectedMediaPlay.getCurrentTime().toSeconds();
-        totalDurationLabel.setText("Duration: "+selectedMediaPlay.getCurrentTime().toSeconds());
+        volumeSlider.valueProperty().addListener(new InvalidationListener() 
+        {
+            public void invalidated(Observable ov) 
+            {
+                if (volumeSlider.isValueChanging()) 
+                {
+                    selectedMediaPlay.setVolume(volumeSlider.getValue() / 100.0);
+                }
+            }
+        });
     }
-    //TODO
-//    Double d = 3.22;
-//    int i = d.intValue();
     
-    
-//    public void duration(){
-//            selectedMediaPlay.currentTimeProperty().addListener(new InvalidationListener() 
-//        {
-//            public void invalidated(Observable ov) {
-//                updateValues();
-//                duration = selectedMediaPlay.getMedia().getDuration();
-//            }
-//        });
-//    }
-//    
-//    protected void updateValues() {
-//  if (durationLabel != null) {
-//     Platform.runLater(new Runnable() {
-//        public void run() {
-//          Duration currentTime = selectedMediaPlay.getCurrentTime();
-//          durationLabel.setText(selectedMediaPlay.getCurrentTime().););
-//          }
-//          }
-//        }
-//     });
+private void updateValues() 
+{
+    if (timeSlider != null && volumeSlider != null) 
+    {
+        Platform.runLater(new Runnable() 
+        {
+            public void run() 
+            {
+                Duration currentTime = selectedMediaPlay.getCurrentTime();
+                durationLabel.setText(formatTime(currentTime, duration));
+                timeSlider.setDisable(duration.isUnknown());
+                
+                if (!timeSlider.isDisabled() && duration.greaterThan(Duration.ZERO) && !timeSlider.isValueChanging()) 
+                {
+                    timeSlider.setValue(currentTime.divide(duration).toMillis() * 100.0);
+                }
+                
+                if (!volumeSlider.isValueChanging()) 
+                {
+                    volumeSlider.setValue((int)Math.round(selectedMediaPlay.getVolume() * 100));
+                }
+            }
+        });
+    }
+}
 
+private void updateValuesListner()
+{
+    selectedMediaPlay.currentTimeProperty().addListener(new InvalidationListener() 
+    {
+        public void invalidated(Observable ov) 
+        {
+            updateValues();
+        }
+    });
+}
 
     
-//    public void duration(){
-//    selectedMediaPlay.currentTimeProperty().addListener((Observable ov) -> {
-//    updateValues();
-//    });
-//
-//    selectedMediaPlay.setOnReady(() -> {
-//    duration = selectedMediaPlay.getMedia().getDuration();
-//    updateValues();
-//    });
-//    }
-//    
-//    protected void updateValues() {
-//    if (durationLabel != null) {
-//    runLater(() -> {
-//    Duration currentTime = selectedMediaPlay.getCurrentTime();
-//    durationLabel.setText(formatTime(currentTime, duration));
-//
-//});
-//}
-//}
-    
+private static String formatTime(Duration elapsed, Duration duration) 
+{
+   int intElapsed = (int)Math.floor(elapsed.toSeconds());
+   int elapsedHours = intElapsed / (60 * 60);
+   
+   if (elapsedHours > 0) 
+   {
+       intElapsed -= elapsedHours * 60 * 60;
+   }
+   int elapsedMinutes = intElapsed / 60;
+   int elapsedSeconds = intElapsed - elapsedHours * 60 * 60 - elapsedMinutes * 60;
+ 
+   if (duration.greaterThan(Duration.ZERO)) 
+   {
+        int intDuration = (int)Math.floor(duration.toSeconds());
+        int durationHours = intDuration / (60 * 60);
+        
+        if (durationHours > 0) 
+        {
+        intDuration -= durationHours * 60 * 60;
+        }
+        
+        int durationMinutes = intDuration / 60;
+        int durationSeconds = intDuration - durationHours * 60 * 60 - durationMinutes * 60;
+        
+        if (durationHours > 0) 
+        {
+            return String.format("%d:%02d:%02d/%d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds, durationHours, durationMinutes, durationSeconds);
+        }
+        else
+        {
+            return String.format("%02d:%02d/%02d:%02d", elapsedMinutes, elapsedSeconds,durationMinutes, durationSeconds);
+        }
+    }
+    else
+    {
+        if (elapsedHours > 0) 
+        {
+            return String.format("%d:%02d:%02d", elapsedHours,elapsedMinutes, elapsedSeconds);
+        }
+        else
+        {
+            return String.format("%02d:%02d",elapsedMinutes, elapsedSeconds);
+        }   
+    }
+}
 }

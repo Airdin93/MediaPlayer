@@ -17,11 +17,11 @@
           <Button mnemonicParsing="false" onAction="#stopButton" text="Stop" />
         </buttons>
       </ButtonBar>
-      <Label fx:id="actionStatusLabel" layoutX="40.0" layoutY="146.0" text="Action Status Label" AnchorPane.leftAnchor="40.0" />
+      <Label fx:id="actionStatusLabel" layoutX="40.0" layoutY="129.0" text="Action Status Label" AnchorPane.leftAnchor="40.0" />
       <Button layoutX="38.0" layoutY="85.0" mnemonicParsing="false" onAction="#openSong" text="Open" AnchorPane.leftAnchor="40.0" />
-      <Label fx:id="totalDurationLabel" layoutX="224.0" layoutY="68.0" text="Total Duration Label" />
-      <Slider fx:id="timeSlider" layoutX="224.0" layoutY="158.0" />
+      <Slider fx:id="timeSlider" layoutX="34.0" layoutY="172.0" />
       <Slider fx:id="volumeSlider" layoutX="368.0" layoutY="20.0" orientation="VERTICAL" />
-      <Label fx:id="durationLabel" layoutX="224.0" layoutY="88.0" text="Duration Label" />
+      <Label fx:id="durationLabel" layoutX="55.0" layoutY="150.0" text="Duration Label" />
+      <Button fx:id="testButton" layoutX="71.0" layoutY="20.0" mnemonicParsing="false" onAction="#testButton" text="Test Button" />
     </children>
 </AnchorPane>
