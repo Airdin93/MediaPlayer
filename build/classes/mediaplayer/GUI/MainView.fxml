@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mediaplayer.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mediaplayer.GUI.MainViewController">
     <children>
       <ButtonBar layoutX="14.0" layoutY="200.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
         <buttons>
@@ -18,7 +18,7 @@
         </buttons>
       </ButtonBar>
       <Label fx:id="actionStatusLabel" layoutX="40.0" layoutY="129.0" text="Action Status Label" AnchorPane.leftAnchor="40.0" />
-      <Button layoutX="38.0" layoutY="85.0" mnemonicParsing="false" onAction="#openSong" text="Open" AnchorPane.leftAnchor="40.0" />
+      <Button layoutX="38.0" layoutY="85.0" mnemonicParsing="false" onAction="#openSongButton" text="Open" AnchorPane.leftAnchor="40.0" />
       <Slider fx:id="timeSlider" layoutX="34.0" layoutY="172.0" />
       <Slider fx:id="volumeSlider" layoutX="368.0" layoutY="20.0" orientation="VERTICAL" />
       <Label fx:id="durationLabel" layoutX="55.0" layoutY="150.0" text="Duration Label" />
