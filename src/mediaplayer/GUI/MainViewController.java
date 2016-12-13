@@ -110,13 +110,6 @@ public class MainViewController {
     }
     
     
-    @FXML
-    private void testButton(ActionEvent event)
-    {
-        volumeSlider.setValue(50);
-        selectedMediaPlay.setVolume(50.0);
-    }
-    
     /**
      * The singleFileChooser method is the file chooser which opens a new
      * window and allows the user to pick a .mp3 file.
@@ -129,6 +122,7 @@ public class MainViewController {
         if (selectedMediaPlay != null) 
         {   
             selectedMediaPlay.stop();
+            playStatusLabel.setText("Play");
             singleFileChooserEvent();
         }
         else
@@ -151,7 +145,10 @@ public class MainViewController {
         }
         else 
         {
-            noMusicError();
+            if (selectedMediaPlay == null)
+            {
+                noMusicError();
+            }
         }
     }
     
